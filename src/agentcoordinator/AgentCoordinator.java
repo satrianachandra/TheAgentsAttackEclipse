@@ -37,6 +37,7 @@ import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 
 import messageclasses.SmithParameter;
+import utils.MyLogger;
 import utils.Terminal;
 
 
@@ -224,7 +225,15 @@ public class AgentCoordinator extends GuiAgent {
 
     
     public static void main(String[]args){
-        // Get a hold on JADE runtime
+    	try {
+			MyLogger.setup();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	MyLogger.setLevel(3);
+    	
+    	// Get a hold on JADE runtime
         Runtime rt = Runtime.instance();
         // Exit the JVM when there are no more containers around
         rt.setCloseVM(true);

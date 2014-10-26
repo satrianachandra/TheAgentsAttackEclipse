@@ -7,13 +7,8 @@ package agentsubcoordinator;
 
 import agentcoordinator.AgentCoordinator;
 import agentsmith.AgentSmith;
-import jade.content.lang.Codec;
-import jade.content.lang.sl.SLCodec;
-import jade.content.onto.OntologyException;
-import jade.content.onto.basic.Action;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.ContainerID;
 import jade.core.ProfileImpl;
 import jade.wrapper.AgentController;
 
@@ -27,8 +22,6 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
-import jade.domain.JADEAgentManagement.JADEManagementOntology;
-import jade.domain.JADEAgentManagement.KillContainer;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import jade.wrapper.StaleProxyException;
@@ -266,8 +259,8 @@ public class AgentSubCoordinator extends Agent {
         System.out.print("runtime created\n");
         
         
-        ProfileImpl mProfile = new ProfileImpl();
-        jade.wrapper.AgentContainer mainContainer = rt.createMainContainer(mProfile);
+        //ProfileImpl mProfile = new ProfileImpl();
+        //jade.wrapper.AgentContainer mainContainer = rt.createMainContainer(mProfile);
         
         
         //start the RMA agent
@@ -306,28 +299,6 @@ public class AgentSubCoordinator extends Agent {
                 killAgents();
             }
         }
-        
-        /*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    /*
-                    try {
-                    killAContainer((ContainerID)here());
-                    } catch (Codec.CodecException ex) {
-                    Logger.getLogger(AgentSubCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (OntologyException ex) {
-                    Logger.getLogger(AgentSubCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-                    }*/
-                    //agentSmithContainer.kill();
-                    //AgentSubCoordinator.agentContainer.kill();
-         /*       } catch (StaleProxyException ex) {
-                    Logger.getLogger(AgentSubCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }).start();
-        */
     }
     
     

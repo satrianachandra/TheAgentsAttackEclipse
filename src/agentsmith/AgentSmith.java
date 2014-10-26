@@ -50,6 +50,8 @@ public class AgentSmith extends Agent {
         theAgent = this;
         AgentSubCoordinator.smithList.add(this);
         
+        LOGGER.log(Level.INFO, "Agent "+getAID().getName()+"is up");
+        
         Object[] args = getArguments();
         if (args != null){
             interval = (long) args[0];
