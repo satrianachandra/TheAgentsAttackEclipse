@@ -16,7 +16,9 @@ import jade.core.Agent;
 import jade.core.ContainerID;
 import jade.core.ProfileImpl;
 import jade.wrapper.AgentController;
+
 import java.util.List;
+
 import jade.core.Runtime;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
@@ -30,10 +32,13 @@ import jade.domain.JADEAgentManagement.KillContainer;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import jade.wrapper.StaleProxyException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import utils.MyLogger;
 import messageclasses.SmithParameter;
 /**
  *
@@ -246,6 +251,14 @@ public class AgentSubCoordinator extends Agent {
     }
     
     public static void main(String[]args){
+    	try {
+			MyLogger.setup();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	MyLogger.setLevel(3);
+    	
         // Get a hold on JADE runtime
         Runtime rt = Runtime.instance();
         // Exit the JVM when there are no more containers around
