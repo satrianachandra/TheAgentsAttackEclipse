@@ -230,7 +230,7 @@ public class AgentSubCoordinator extends Agent {
             
             System.out.println(" ****I Received a Message***" +"\n"+
                     "The Sender Name is::>"+ SenderName+"\n"+
-                    "The Content of the Message is::> " + sp.toString() + "\n"+
+                    //"The Content of the Message is::> " + sp.toString() + "\n"+
                     "::: And Performative is::> " + Message_Performative + "\n");
             System.out.println("ooooooooooooooooooooooooooooooooooooooo");
            
@@ -281,27 +281,6 @@ public class AgentSubCoordinator extends Agent {
             Logger.getLogger(AgentSubCoordinator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    /*
-    public void killAContainer(ContainerID cid) throws Codec.CodecException, OntologyException {
-        //creating the request
-        ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-        request.setLanguage(new SLCodec().getName());
-        request.setOntology(JADEManagementOntology.getInstance().getName());
-        
-        //create the action
-        KillContainer kill = new KillContainer();
-        kill.setContainer(cid);
-        
-        //sending the request and action to AMS
-        
-        getContentManager().fillContent(request, new Action(getAMS(), kill));
-        request.addReceiver(getAMS());
-        send(request);
-
-    }
-    */
     
     private void killAgents(){
         System.out.println("killing agents");

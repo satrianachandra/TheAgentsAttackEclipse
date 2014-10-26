@@ -117,13 +117,15 @@ public class AgentSmith extends Agent {
                 
                     //System.exit(1);
                 }catch(Exception ex){
-                    Logger.getLogger(AgentSmith.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(AgentSmith.class.getName()).log(Level.SEVERE, null, "failed due to time out or refused");
                 }finally{
                     
                     try {
-                        tcpClientSocket.close();
-                       // out.close();
-                        System.out.println("AID:"+getAID().getName());
+                        if (tcpClientSocket!=null){ 
+                        	tcpClientSocket.close();
+                        	System.out.println("AID:"+getAID().getName());
+                        }
+                        
                     } catch (IOException ex) {
                         Logger.getLogger(AgentSmith.class.getName()).log(Level.SEVERE, null, ex);
                     }

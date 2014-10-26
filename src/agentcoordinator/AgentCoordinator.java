@@ -19,14 +19,23 @@ import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import jade.core.Runtime;
 import jade.lang.acl.UnreadableException;
+import jade.tools.logging.ontology.GetAllLoggers;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.amazonaws.services.ec2.model.RunInstancesRequest;
+import com.amazonaws.services.ec2.model.RunInstancesResult;
+
 import messageclasses.SmithParameter;
 import utils.Terminal;
 
@@ -44,14 +53,20 @@ public class AgentCoordinator extends GuiAgent {
     public static final int MESSAGE_KILL_AGENTS = 4;
     public static final int GET_NUMBER_OF_AGENTS = 5;
     public static final int MESSAGE_I_AM_UP = 6;
+    private final double max_agents_per_machine = 2500.0;
+    private SmithParameter pendingSP;
+    
+    private int numberOfInstanceRequired;
+    private boolean isWaitingForInstance=false;
     
     public static final String SEMICOLON = ";";
     //an example of adding 1 remote platforms
     public AID remoteDF;
     private AgentCoordinatorUI agentUI;
-    public static List<AgentSubCoordinatorData>listRemoteSubCoordinators;
+    public static List<AID>listOfSubCoordinators;
     private int numberOfRunningAgents=0;
     public static List<Process>sshProcessess;
+    private AmazonEC2Client amazonEC2Client;
     
     protected void setup() {
         /** Registration with the DF */
@@ -85,6 +100,26 @@ public class AgentCoordinator extends GuiAgent {
         //}
         ReceiveMessage rm = new ReceiveMessage();
         addBehaviour(rm);
+        
+        //keep list of the SCs
+        listOfSubCoordinators = new ArrayList<>();
+        //add the local SC
+        listOfSubCoordinators.add(getAID());
+        
+        //AWS SDK stuffs
+        try {
+			AWSCredentials credentials =
+					  new PropertiesCredentials(
+					         AgentCoordinator.class.getResourceAsStream("AwsCredentials.properties"));
+			amazonEC2Client =
+	        		  new AmazonEC2Client(credentials);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        amazonEC2Client.setEndpoint("ec2.eu-west-1.amazonaws.com");
+        
+        
     }
     
     
@@ -130,6 +165,7 @@ public class AgentCoordinator extends GuiAgent {
         private String MyPlan;
         private AID sender;
         
+        
         public void action() {
             ACLMessage msg = receive();
             if(msg != null) {
@@ -151,7 +187,14 @@ public class AgentCoordinator extends GuiAgent {
                             numberOfRunningAgents+=sp.numberOfRunningAgents;
                             agentUI.updateNumberOfAgents(numberOfRunningAgents);
                         }if (Message_Performative.equals("INFORM")&& sp.type==MESSAGE_I_AM_UP){
-                            launchAgentsInSC(sender);
+                            //launchAgentsInSC(sender);
+                        	if (!listOfSubCoordinators.contains(sender)){
+                        		listOfSubCoordinators.add(sender);
+                        		if ((listOfSubCoordinators.size()>=numberOfInstanceRequired) && (isWaitingForInstance)){
+                        			launchAllAgents(pendingSP);
+                        			agentUI.setTextAreaContent("Instances ready, launching agents...");
+                        		}
+                        	}
                         }
                     } catch (UnreadableException ex) {
                         Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
@@ -212,29 +255,6 @@ public class AgentCoordinator extends GuiAgent {
         } catch (StaleProxyException ex) {
             Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        //Add remote machines
-        listRemoteSubCoordinators = new ArrayList<>();
-        
-        AID remoteSubCoordinator = new AID("SC@172.30.1.158:1099/JADE", AID.ISGUID);
-        remoteSubCoordinator.addAddresses("http://ip-172-30-1-158.eu-west-1.compute.internal:7778/acc");
-        //listRemoteSubCoordinators.add(new AgentSubCoordinatorData("172.30.1.158", remoteSubCoordinator));
-        
-        remoteSubCoordinator = new AID("SC@172.30.1.232:1099/JADE", AID.ISGUID);
-        remoteSubCoordinator.addAddresses("http://ip-172-30-1-232.eu-west-1.compute.internal:7778/acc");
-        //listRemoteSubCoordinators.add(new AgentSubCoordinatorData("172.30.1.232", remoteSubCoordinator));
-        
-        System.out.print("list size: "+listRemoteSubCoordinators.size());
-        //start the agents in the remotes
-        sshProcessess = new ArrayList<>();
-        for(int i=0;i<listRemoteSubCoordinators.size();i++){
-            String hostname = listRemoteSubCoordinators.get(i).getMachineIP();
-            String setClasspath = "export CLASSPATH=:$CLASSPATH;";
-            String createPlatformAndAgents= " cd /home/ubuntu/Codes/TheAgentsAttack/src&&java agentsubcoordinator.AgentSubCoordinator;";
-            Process pr = Terminal.executeNoError("ssh -X -o StrictHostKeyChecking=no -i /home/ubuntu/aws_key_chasat.pem "+hostname+" "+"\""+setClasspath+createPlatformAndAgents+"\"");
-            sshProcessess.add(pr);
-        }
            
     }
     
@@ -248,98 +268,90 @@ public class AgentCoordinator extends GuiAgent {
         sendMessageToSmith(GET_NUMBER_OF_AGENTS);
     }
     
-    private void launchAgentsInSC(AID scAID){
-        ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-        msg.addReceiver(scAID);
-        msg.setLanguage("English");
-        try {
-            SmithParameter sp = new SmithParameter();
-            sp.numberOfAgent=1000;
-            sp.serverAddress = "172.30.1.98";
-            sp.serverPort=8080;
-            sp.fiboNumber="1000";
-            sp.interval=1000L;
-            sp.type=MESSAGE_LAUNCH_AGENTS; 
-            msg.setContentObject(sp);
-        } catch (IOException ex) {
-            Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        send(msg);
-
-    }
-    
     private void sendMessageToSmith(int spType){
-        //the local
+    	SmithParameter sp = new SmithParameter();
+        sp.type=spType; 
         ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-        msg.addReceiver(new AID("SC", AID.ISLOCALNAME));
         msg.setLanguage("English");
         try {
-            SmithParameter sp = new SmithParameter();
-            sp.type=spType; 
             msg.setContentObject(sp);
         } catch (IOException ex) {
             Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //msg.setContent("launch agents");
-        send(msg);
-        
-        //the remotes
-        for (int i=0;i<listRemoteSubCoordinators.size();i++){
-            SmithParameter sp = new SmithParameter();
-            sp.type=spType; 
-            ACLMessage msg2 = new ACLMessage(ACLMessage.REQUEST);
-            msg2.setLanguage("English");
-            try {
-                msg2.setContentObject(sp);
-            } catch (IOException ex) {
-                Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            msg2.addReceiver(listRemoteSubCoordinators.get(i).getAID());
-            System.out.println("List of receivers: "+msg.getAllIntendedReceiver().toString());
-            send(msg2);
-            
+    	for (int i=0;i<listOfSubCoordinators.size();i++){
+            msg.addReceiver(listOfSubCoordinators.get(i));
         }
-        
+    	System.out.println("List of receivers: "+msg.getAllIntendedReceiver().toString());
+    	send(msg);
         
     }
 
     private void launchAllAgents(SmithParameter sp){
         //send message to the subcoordinator to launch agent
         
-        //dividing the agents across machines
-        int agentsPerMachine = sp.numberOfAgent/(listRemoteSubCoordinators.size()+1);
-        System.out.println("number of agents: "+agentsPerMachine);
-        
-        sp.numberOfAgent = agentsPerMachine;
-        System.out.println(sp.numberOfAgent);
-        ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-        
-        //for local SC agent
-        msg.addReceiver(new AID("SC", AID.ISLOCALNAME));
-        msg.setLanguage("English");
-        try {
-            msg.setContentObject(sp);
-        } catch (IOException ex) {
-            Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        send(msg);
-
-        //for remote SC agents
-        for (int i=0;i<listRemoteSubCoordinators.size();i++){
-            ACLMessage msg2 = new ACLMessage(ACLMessage.REQUEST);
-            msg2.setLanguage("English");
+    	
+    	numberOfInstanceRequired = (int) Math.ceil(sp.numberOfAgent/max_agents_per_machine);
+    	System.out.println("instance required: "+numberOfInstanceRequired);
+    	
+    	int additionalInstance = numberOfInstanceRequired - listOfSubCoordinators.size();
+    	if (additionalInstance>0){
+    		//launch additional instance
+    		launchInstances(additionalInstance);
+    		//this will block, and then need to wait for the jade and SC run on the machine.
+    		isWaitingForInstance = true;
+    		pendingSP = sp;
+    		//show loading screen
+    		agentUI.setTextAreaContent("launching "+additionalInstance+" additional instances, please wait...");
+    	}else{
+    		//dividing the agents across machines
+    		int agentsPerMachine = sp.numberOfAgent/(listOfSubCoordinators.size());
+    		int leftOvers = sp.numberOfAgent % listOfSubCoordinators.size(); 
+	        sp.numberOfAgent = agentsPerMachine;
+	        ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+	        msg.setLanguage("English");
             try {
-                msg2.setContentObject(sp);
+                msg.setContentObject(sp);
             } catch (IOException ex) {
                 Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
             }
-            msg2.addReceiver(listRemoteSubCoordinators.get(i).getAID());
-            System.out.println("List of receivers: "+msg.getAllIntendedReceiver().toString());
-            send(msg2);
-        }   
+	        for (int i=0;i<listOfSubCoordinators.size();i++){
+	            msg.addReceiver(listOfSubCoordinators.get(i));
+	        }
+	        System.out.println("List of receivers: "+msg.getAllIntendedReceiver().toString());
+            send(msg);
+            
+            if (leftOvers>0){
+	            sp.numberOfAgent = leftOvers;
+	            ACLMessage msg2 = new ACLMessage(ACLMessage.REQUEST);
+	            msg2.addReceiver(listOfSubCoordinators.get(listOfSubCoordinators.size()-1));
+		        msg2.setLanguage("English");
+	            try {
+	                msg2.setContentObject(sp);
+	            } catch (IOException ex) {
+	                Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+	            }
+	            send(msg2);
+            }
+            
+    	}
     }
 
+    
+    private void launchInstances(int numberOfInstance){
+    	RunInstancesRequest runInstancesRequest = 
+    			  new RunInstancesRequest();
+    		        	
+    		  runInstancesRequest.withImageId("ami-4b814f22") //
+    		                     .withInstanceType("t2.micro")
+    		                     .withMinCount(numberOfInstance)
+    		                     .withMaxCount(numberOfInstance)
+    		                     .withSubnetId("subnet-a020fac5")
+    		                     .withKeyName("14 _LP1_KEY_ D7001D_CHASAT-4")
+    		                     .withSecurityGroups("14 _LP1_SEC_D7001D_CHASAT-4");
+    		  RunInstancesResult runInstancesResult = 
+    				  amazonEC2Client.runInstances(runInstancesRequest);
+    }
+    
     
     @Override
     protected void takeDown(){
@@ -347,5 +359,6 @@ public class AgentCoordinator extends GuiAgent {
             sshProcessess.get(i).destroy();
         }
     }
+    
 }
 
