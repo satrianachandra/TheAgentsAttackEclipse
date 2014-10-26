@@ -114,8 +114,7 @@ public class AgentCoordinator extends GuiAgent {
          
         //keep list of the SCs
         listOfSubCoordinators = new ArrayList<>();
-        //add the local SC
-        listOfSubCoordinators.add(getAID());
+
         
         //AWS SDK stuffs
         try {
@@ -301,6 +300,7 @@ public class AgentCoordinator extends GuiAgent {
     	System.out.println("instance required: "+numberOfInstanceRequired);
     	
     	int additionalInstance = numberOfInstanceRequired - listOfSubCoordinators.size();
+    	System.out.println("add: "+additionalInstance);
     	if (additionalInstance>0){
     		//launch additional instance
     		launchInstances(additionalInstance);
