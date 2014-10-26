@@ -139,7 +139,11 @@ public class AgentCoordinator extends GuiAgent {
     
     public class SendMessage extends OneShotBehaviour {
         
-        private ACLMessage msg;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private ACLMessage msg;
         
         public SendMessage(ACLMessage msg){
             super();
