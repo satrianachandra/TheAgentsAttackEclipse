@@ -36,6 +36,8 @@ public class AgentSmith extends Agent {
     private String fiboNumber;
     //private AID coordinatorAID;
     
+    private final Logger LOGGER =
+            Logger.getLogger(AgentSmith.class.getName());
     private Socket tcpClientSocket;
     
     //private PrintWriter out ;
@@ -124,6 +126,7 @@ public class AgentSmith extends Agent {
                         if (tcpClientSocket!=null){ 
                         	tcpClientSocket.close();
                         	System.out.println("AID:"+getAID().getName());
+                        	LOGGER.log(Level.INFO, "AID:{0}",getAID().getName());
                         }
                         
                     } catch (IOException ex) {
