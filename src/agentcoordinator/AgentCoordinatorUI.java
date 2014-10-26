@@ -394,5 +394,9 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
     public void setTextAreaContent(String content){
     	textAreaMachines.setText(content);
     }
+    
+    public void setStatus(String content){
+    	labelIsReady.setText(content);
+    }
 }
 

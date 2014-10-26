@@ -56,7 +56,7 @@ public class AgentCoordinator extends GuiAgent {
     private final double max_agents_per_machine = 2500.0;
     private SmithParameter pendingSP;
     
-    private int numberOfInstanceRequired;
+    private int numberOfInstanceRequired=1;
     private boolean isWaitingForInstance=false;
     
     public static final String SEMICOLON = ";";
@@ -101,6 +101,17 @@ public class AgentCoordinator extends GuiAgent {
         ReceiveMessage rm = new ReceiveMessage();
         addBehaviour(rm);
         
+        //Start the local Agent SubCoordinator
+        AgentController agentSubCoodinator;
+        Object[] subCoordArgs = new Object[1];
+        try {
+            agentSubCoodinator = getContainerController().createNewAgent("SC",
+                    "agentsubcoordinator.AgentSubCoordinator", subCoordArgs);
+            agentSubCoodinator.start();
+        } catch (StaleProxyException ex) {
+            Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
         //keep list of the SCs
         listOfSubCoordinators = new ArrayList<>();
         //add the local SC
@@ -192,6 +203,8 @@ public class AgentCoordinator extends GuiAgent {
                             agentUI.updateNumberOfAgents(numberOfRunningAgents);
                         }if (Message_Performative.equals("INFORM")&& sp.type==MESSAGE_I_AM_UP){
                             //launchAgentsInSC(sender);
+                        	System.out.println("An instance is up!!");
+                        	agentUI.setStatus("Ready");
                         	if (!listOfSubCoordinators.contains(sender)){
                         		listOfSubCoordinators.add(sender);
                         		if ((listOfSubCoordinators.size()>=numberOfInstanceRequired) && (isWaitingForInstance)){
@@ -222,7 +235,7 @@ public class AgentCoordinator extends GuiAgent {
         //start main container
         ProfileImpl mProfile = new ProfileImpl(null,1099,null);
         jade.wrapper.AgentContainer mainContainer = rt.createMainContainer(mProfile);
-        
+        ///*
         
         //starting RMA agent for monitoring purposes
         try {
@@ -249,17 +262,7 @@ public class AgentCoordinator extends GuiAgent {
             Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        //Start the local Agent SubCoordinator
-        AgentController agentSubCoodinator;
-        Object[] subCoordArgs = new Object[1];
-        try {
-            agentSubCoodinator = agentContainer.createNewAgent("SC",
-                    "agentsubcoordinator.AgentSubCoordinator", subCoordArgs);
-            agentSubCoodinator.start();
-        } catch (StaleProxyException ex) {
-            Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-        }
-           
+        
     }
     
     private void killAllAgentSmith(){
