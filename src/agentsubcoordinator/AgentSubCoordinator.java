@@ -272,14 +272,14 @@ public class AgentSubCoordinator extends Agent {
         
         //start the RMA agent
         //starting RMA agent for monitoring purposes
-        
+        /*
         try {
             AgentController agentRMA = mainContainer.createNewAgent("RMA","jade.tools.rma.rma", null);
             agentRMA.start();
         } catch (StaleProxyException ex) {
             Logger.getLogger(AgentSubCoordinator.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        */
 
         
         ProfileImpl pContainer = new ProfileImpl();//null, startingPort+i,null);
