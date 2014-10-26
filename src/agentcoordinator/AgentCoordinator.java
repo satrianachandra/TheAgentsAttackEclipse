@@ -312,6 +312,7 @@ public class AgentCoordinator extends GuiAgent {
     	}else{
     		//dividing the agents across machines
     		int agentsPerMachine = sp.numberOfAgent/(listOfSubCoordinators.size());
+    		System.out.println("agents permachine: "+agentsPerMachine);
     		int leftOvers = sp.numberOfAgent % listOfSubCoordinators.size(); 
 	        sp.numberOfAgent = agentsPerMachine;
 	        ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
