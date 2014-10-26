@@ -51,7 +51,7 @@ public class AgentSubCoordinator extends Agent {
     private int platformNumber=0;
     private int numberOfRunningAgents = 0;
     public static jade.wrapper.ContainerController agentContainer;
-    private jade.wrapper.ContainerController agentSmithContainer;
+    //private jade.wrapper.ContainerController agentSmithContainer;
     private AID coordinatorAID;
     
     public static List<AgentSmith>smithList = new ArrayList<>();
@@ -108,7 +108,7 @@ public class AgentSubCoordinator extends Agent {
         //mainContainersList.add(mainContainer);
 
         ProfileImpl pContainer = new ProfileImpl();//null, startingPort+i,null);
-        agentSmithContainer = rt.createAgentContainer(pContainer);
+        jade.wrapper.ContainerController agentSmithContainer = rt.createAgentContainer(pContainer);
         System.out.println("containers created "+pContainer);
         for (int j=0;j<numberOfAgents;j++){
             try {
@@ -118,10 +118,10 @@ public class AgentSubCoordinator extends Agent {
                 smithArgs[2] = serverPort;
                 smithArgs[3] = fiboNumber;
                 //smithArgs[3] = getAID(); //the subcoordinator's aid
-                //agentSmith = agentSmithContainer.createNewAgent("Platform-"+platformNumber+"_Smith-"+j,
-                //        "agentsmith.AgentSmith", smithArgs);
-                agentSmith = agentSmithContainer.createNewAgent("Smith-"+j,
-                               "agentsmith.AgentSmith", smithArgs);
+                agentSmith = agentSmithContainer.createNewAgent("Platform-"+platformNumber+"_Smith-"+j,
+                        "agentsmith.AgentSmith", smithArgs);
+                //agentSmith = agentSmithContainer.createNewAgent("Smith-"+j,
+                //               "agentsmith.AgentSmith", smithArgs);
                 agentSmith.start();
                 numberOfRunningAgents++;
                 agentsList.add(agentSmith);
