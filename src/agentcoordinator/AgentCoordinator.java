@@ -200,7 +200,7 @@ public class AgentCoordinator extends GuiAgent {
                     try {
                         sp = (SmithParameter)msg.getContentObject();
                         if (Message_Performative.equals("INFORM")&& sp.type==GET_NUMBER_OF_AGENTS){
-                            numberOfRunningAgents+=sp.numberOfRunningAgents;
+                            numberOfRunningAgents= sp.numberOfRunningAgents + numberOfRunningAgents;
                             agentUI.updateNumberOfAgents(numberOfRunningAgents);
                         }if (Message_Performative.equals("INFORM")&& sp.type==MESSAGE_I_AM_UP){
                             //launchAgentsInSC(sender);
@@ -212,6 +212,10 @@ public class AgentCoordinator extends GuiAgent {
                         		if ((listOfSubCoordinators.size()>=numberOfInstanceRequired) && (isWaitingForInstance)){
                         			launchAllAgents(pendingSP);
                         			agentUI.setTextAreaContent("Instances ready, launching agents...");
+                        			agentUI.appendTextAreaContent("\nAdditional Instances:\n");
+                        			for (int i=0;i<instanceIDList.size();i++){
+                                        agentUI.appendTextAreaContent(instanceIDList.get(i));
+                                    }
                         		}else if (isWaitingForInstance){
                         			agentUI.setStatus("launching additional instances, please wait ...");
                         		}
@@ -292,15 +296,15 @@ public class AgentCoordinator extends GuiAgent {
     
     private void killAllAgentSmith(){
         //send a kill message to the AgentSubCoordinator  
-        sendMessageToSmith(MESSAGE_KILL_AGENTS);
+        sendMessageToSC(MESSAGE_KILL_AGENTS);
     }
         
     private void getNumberOfAgents(){
         numberOfRunningAgents=0;
-        sendMessageToSmith(GET_NUMBER_OF_AGENTS);
+        sendMessageToSC(GET_NUMBER_OF_AGENTS);
     }
     
-    private void sendMessageToSmith(int spType){
+    private void sendMessageToSC(int spType){
     	SmithParameter sp = new SmithParameter();
         sp.type=spType; 
         ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -381,7 +385,7 @@ public class AgentCoordinator extends GuiAgent {
     		                     .withMaxCount(numberOfInstance)
     		                     .withSubnetId("subnet-a020fac5")
     		                     .withKeyName("14 _LP1_KEY_ D7001D_CHASAT-4")
-    		                     .withSecurityGroupIds("sg-cbc665ae");
+    		                     .withSecurityGroupIds("sg-cbc665ae").withMonitoring(true);
     		  RunInstancesResult runInstancesResult = 
     				  amazonEC2Client.runInstances(runInstancesRequest);
     		  
@@ -393,7 +397,7 @@ public class AgentCoordinator extends GuiAgent {
     			  //then tag them for easy finding
     			  CreateTagsRequest createTagsRequest = new CreateTagsRequest();
     			  createTagsRequest.withResources(instance.getInstanceId()) //
-    			      .withTags(new Tag("SCAgent", "FromJava-" + i));
+    			      .withTags(new Tag("Name", "SCAgent-TeamAsia-" + i));
     			  amazonEC2Client.createTags(createTagsRequest);
     		  }
     		  
@@ -404,8 +408,10 @@ public class AgentCoordinator extends GuiAgent {
     	TerminateInstancesResult terminateInstanceResult = amazonEC2Client.terminateInstances(terminateInstanceRequest);
     }
     
-    private void terminateAllInstances(){
-    	
+    public void terminateAllAdditionalInstances(){
+    	for (int i=0;i<instanceIDList.size();i++){
+    		terminateInstance(instanceIDList.get(i));
+    	}
     }
     
     @Override

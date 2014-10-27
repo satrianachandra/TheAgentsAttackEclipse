@@ -42,7 +42,7 @@ public class AgentSubCoordinator extends Agent {
     private List<jade.wrapper.AgentContainer> mainContainersList;
     private List<AgentController> agentsList;
     private int platformNumber=0;
-    private int numberOfRunningAgents = 0;
+    private int numberOfRunningAgents=0;
     public static jade.wrapper.ContainerController agentContainer;
     //private jade.wrapper.ContainerController agentSmithContainer;
     private AID coordinatorAID;
@@ -189,6 +189,7 @@ public class AgentSubCoordinator extends Agent {
     private String SenderName;
     private String MyPlan;
     private SmithParameter sp;
+    private AID sender;
     
     public void action() {
         ACLMessage msg = receive();
@@ -198,6 +199,7 @@ public class AgentSubCoordinator extends Agent {
             Message_Performative = msg.getPerformative(msg.getPerformative());
             Message_Content = msg.getContent();
             SenderName = msg.getSender().getLocalName();
+            sender =msg.getSender(); 
             
             if (msg.hasByteSequenceContent()){
             try {
@@ -211,7 +213,7 @@ public class AgentSubCoordinator extends Agent {
                     }else if (Message_Performative.equals("REQUEST") && sp.type==AgentCoordinator.GET_NUMBER_OF_AGENTS){
                         //send back the number of running agents
                         ACLMessage response = new ACLMessage(ACLMessage.INFORM);
-                        response.addReceiver(coordinatorAID);
+                        response.addReceiver(sender);
                         response.setLanguage("English");
                         try {
                             SmithParameter sp = new SmithParameter();
