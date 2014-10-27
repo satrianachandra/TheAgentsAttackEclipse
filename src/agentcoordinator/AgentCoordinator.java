@@ -33,8 +33,14 @@ import java.util.logging.Logger;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.amazonaws.services.ec2.model.CreateTagsRequest;
+import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
+import com.amazonaws.services.ec2.model.Tag;
+import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
+import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 
 import messageclasses.SmithParameter;
 import utils.MyLogger;
@@ -59,6 +65,7 @@ public class AgentCoordinator extends GuiAgent {
     
     private int numberOfInstanceRequired=1;
     private boolean isWaitingForInstance=false;
+    private List<String>instanceIDList;
     
     public static final String SEMICOLON = ";";
     //an example of adding 1 remote platforms
@@ -115,7 +122,9 @@ public class AgentCoordinator extends GuiAgent {
          
         //keep list of the SCs
         listOfSubCoordinators = new ArrayList<>();
-
+        
+        //instance IDs list
+        instanceIDList = new ArrayList<>();
         
         //AWS SDK stuffs
         try {
@@ -204,12 +213,15 @@ public class AgentCoordinator extends GuiAgent {
                         }if (Message_Performative.equals("INFORM")&& sp.type==MESSAGE_I_AM_UP){
                             //launchAgentsInSC(sender);
                         	System.out.println("An instance is up!!");
+                        	System.out.println(sender.getName()+" is up");
                         	agentUI.setStatus("Ready");
                         	if (!listOfSubCoordinators.contains(sender)){
                         		listOfSubCoordinators.add(sender);
                         		if ((listOfSubCoordinators.size()>=numberOfInstanceRequired) && (isWaitingForInstance)){
                         			launchAllAgents(pendingSP);
                         			agentUI.setTextAreaContent("Instances ready, launching agents...");
+                        		}else{
+                        			agentUI.setStatus("launching additional instances, please wait ...");
                         		}
                         	}
                         }
@@ -309,10 +321,10 @@ public class AgentCoordinator extends GuiAgent {
     	System.out.println("instance required: "+numberOfInstanceRequired);
     	
     	int additionalInstance = numberOfInstanceRequired - listOfSubCoordinators.size();
-    	System.out.println("add: "+additionalInstance);
+    	System.out.println("additional instances: "+additionalInstance);
     	if (additionalInstance>0){
     		//launch additional instance
-    		launchInstances(additionalInstance);
+    		launchAdditionalInstances(additionalInstance);
     		//this will block, and then need to wait for the jade and SC run on the machine.
     		isWaitingForInstance = true;
     		pendingSP = sp;
@@ -354,11 +366,11 @@ public class AgentCoordinator extends GuiAgent {
     }
 
     
-    private void launchInstances(int numberOfInstance){
+    private void launchAdditionalInstances(int numberOfInstance){
     	RunInstancesRequest runInstancesRequest = 
     			  new RunInstancesRequest();
     		        	
-    		  runInstancesRequest.withImageId("ami-4b814f22") //
+    		  runInstancesRequest.withImageId("ami-84c36bf3") 
     		                     .withInstanceType("t2.micro")
     		                     .withMinCount(numberOfInstance)
     		                     .withMaxCount(numberOfInstance)
@@ -367,8 +379,29 @@ public class AgentCoordinator extends GuiAgent {
     		                     .withSecurityGroups("14 _LP1_SEC_D7001D_CHASAT-4");
     		  RunInstancesResult runInstancesResult = 
     				  amazonEC2Client.runInstances(runInstancesRequest);
+    		  
+    		  Reservation myReservation = runInstancesResult.getReservation();
+    		  List<Instance> instanceList=  myReservation.getInstances();
+    		  for (int i=0;i>instanceList.size();i++){
+    			  Instance instance= instanceList.get(i);
+    			  instanceIDList.add(instance.getInstanceId()); //add to our list of instances ID
+    			  //then tag them for easy finding
+    			  CreateTagsRequest createTagsRequest = new CreateTagsRequest();
+    			  createTagsRequest.withResources(instance.getInstanceId()) //
+    			      .withTags(new Tag("SCAgent", "FromJava-" + i));
+    			  amazonEC2Client.createTags(createTagsRequest);
+    		  }
+    		  
+    }
+
+    private void terminateInstance(String instanceID){
+    	TerminateInstancesRequest terminateInstanceRequest =  new TerminateInstancesRequest().withInstanceIds(instanceID);
+    	TerminateInstancesResult terminateInstanceResult = amazonEC2Client.terminateInstances(terminateInstanceRequest);
     }
     
+    private void terminateAllInstances(){
+    	
+    }
     
     @Override
     protected void takeDown(){
