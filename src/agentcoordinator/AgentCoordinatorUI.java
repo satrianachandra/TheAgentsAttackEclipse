@@ -29,7 +29,6 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
     public AgentCoordinatorUI() {
         initComponents();
         //addWindowListener(new WindowEventHandler());
-        setEnabled(true);
         setVisible(true);
         buttonKillAllAgents.setEnabled(false);
     }
