@@ -130,16 +130,6 @@ public class AgentCoordinator extends GuiAgent {
         amazonEC2Client.setEndpoint("ec2.eu-west-1.amazonaws.com");
         
         
-      //Start the local Agent SubCoordinator
-        AgentController agentSubCoodinator;
-        Object[] subCoordArgs = new Object[1];
-        try {
-            agentSubCoodinator = getContainerController().createNewAgent("SC",
-                    "agentsubcoordinator.AgentSubCoordinator", subCoordArgs);
-            agentSubCoodinator.start();
-        } catch (StaleProxyException ex) {
-            Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
         
     }
@@ -284,6 +274,17 @@ public class AgentCoordinator extends GuiAgent {
             Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+      //Start the local Agent SubCoordinator
+        AgentController agentSubCoodinator;
+        Object[] subCoordArgs = new Object[1];
+        try {
+            agentSubCoodinator = agentContainer.createNewAgent("SC",
+                    "agentsubcoordinator.AgentSubCoordinator", subCoordArgs);
+            agentSubCoodinator.start();
+        } catch (StaleProxyException ex) {
+            Logger.getLogger(AgentCoordinator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
         
     }
     
