@@ -141,7 +141,7 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
 
         labelIsReady.setText("Not ready yet");
 
-        jLabel12.setText("Active Machines:");
+        jLabel12.setText("Information:");
 
         textAreaMachines.setColumns(20);
         textAreaMachines.setRows(5);

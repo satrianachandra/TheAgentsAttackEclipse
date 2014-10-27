@@ -408,6 +408,7 @@ public class AgentCoordinator extends GuiAgent {
     }
     
     public void terminateAllAdditionalInstances(){
+    	agentUI.appendTextAreaContent("terminating additional instances");
     	for (int i=0;i<instanceIDList.size();i++){
     		terminateInstance(instanceIDList.get(i));
     	}
