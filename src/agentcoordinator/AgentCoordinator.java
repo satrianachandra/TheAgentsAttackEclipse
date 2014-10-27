@@ -216,14 +216,14 @@ public class AgentCoordinator extends GuiAgent {
                             //launchAgentsInSC(sender);
                         	System.out.println("An instance is up!!");
                         	System.out.println(sender.getName()+" is up");
-                        	//agentUI.setStatus("Ready");
+                        	agentUI.setStatus("Ready");
                         	if (!listOfSubCoordinators.contains(sender)){
                         		listOfSubCoordinators.add(sender);
                         		if ((listOfSubCoordinators.size()>=numberOfInstanceRequired) && (isWaitingForInstance)){
                         			launchAllAgents(pendingSP);
-                        			//agentUI.setTextAreaContent("Instances ready, launching agents...");
+                        			agentUI.setTextAreaContent("Instances ready, launching agents...");
                         		}else if (isWaitingForInstance){
-                        			//agentUI.setStatus("launching additional instances, please wait ...");
+                        			agentUI.setStatus("launching additional instances, please wait ...");
                         		}
                         	}
                         }
@@ -331,7 +331,7 @@ public class AgentCoordinator extends GuiAgent {
     		isWaitingForInstance = true;
     		pendingSP = sp;
     		//show loading screen
-    		//agentUI.setTextAreaContent("launching "+additionalInstance+" additional instances, please wait...");
+    		agentUI.setTextAreaContent("launching "+additionalInstance+" additional instances, please wait...");
     	}else{
     		//dividing the agents across machines
     		int agentsPerMachine = sp.numberOfAgent/(listOfSubCoordinators.size());

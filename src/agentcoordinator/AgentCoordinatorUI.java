@@ -11,6 +11,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import messageclasses.SmithParameter;
 
 /**
@@ -26,8 +28,14 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
      */
     public AgentCoordinatorUI() {
         initComponents();
-        addWindowListener(new WindowEventHandler());
-        setVisible(true);
+        //addWindowListener(new WindowEventHandler());
+        //setVisible(true);
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AgentCoordinatorUI().setVisible(true);
+            }
+        });
         buttonKillAllAgents.setEnabled(false);
     }
 
@@ -44,14 +52,7 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
         textFieldNumberOfAgents = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         textFieldIntervalOfTicker = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        textAreaSendMessage = new javax.swing.JTextArea();
-        buttonSendMessage = new javax.swing.JButton();
         buttonLaunchAgents = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        textAreaMessagesReceived = new javax.swing.JTextArea();
-        jLabel4 = new javax.swing.JLabel();
         buttonKillAllAgents = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -63,6 +64,12 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
         labelNumberOfAgents = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         textFieldFiboNumber = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        labelIsReady = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        textAreaMachines = new javax.swing.JTextArea();
+        buttonExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,26 +86,12 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Send Message to Smiths");
-
-        textAreaSendMessage.setColumns(20);
-        textAreaSendMessage.setRows(5);
-        jScrollPane1.setViewportView(textAreaSendMessage);
-
-        buttonSendMessage.setText("send");
-
         buttonLaunchAgents.setText("Launch!");
         buttonLaunchAgents.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonLaunchAgentsActionPerformed(evt);
             }
         });
-
-        textAreaMessagesReceived.setColumns(20);
-        textAreaMessagesReceived.setRows(5);
-        jScrollPane2.setViewportView(textAreaMessagesReceived);
-
-        jLabel4.setText("Messages Received");
 
         buttonKillAllAgents.setText("Kill Agents");
         buttonKillAllAgents.addActionListener(new java.awt.event.ActionListener() {
@@ -133,6 +126,23 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
 
         textFieldFiboNumber.setText("1000000");
 
+        jLabel10.setText("Status:");
+
+        labelIsReady.setText("Not ready yet");
+
+        jLabel12.setText("Active Machines:");
+
+        textAreaMachines.setColumns(20);
+        textAreaMachines.setRows(5);
+        jScrollPane3.setViewportView(textAreaMachines);
+
+        buttonExit.setText("exit");
+        buttonExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExitActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -142,44 +152,54 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(textFieldIntervalOfTicker, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-                            .addComponent(textFieldNumberOfAgents)))
-                    .addComponent(buttonKillAllAgents)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(buttonSendMessage)
-                    .addComponent(buttonLaunchAgents)
-                    .addComponent(jLabel5))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textFieldServerPort)
-                            .addComponent(textFieldServerAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(labelNumberOfAgents, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(buttonRefreshNumberOfAgents)))
-                        .addGap(0, 8, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel1)
+                                            .addComponent(jLabel2))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(textFieldIntervalOfTicker, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                                            .addComponent(textFieldNumberOfAgents)))
+                                    .addComponent(buttonKillAllAgents)
+                                    .addComponent(buttonLaunchAgents)
+                                    .addComponent(jLabel5))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel6)
+                                            .addComponent(jLabel7))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(textFieldServerPort)
+                                            .addComponent(textFieldServerAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel9)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(textFieldFiboNumber))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(labelNumberOfAgents, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(buttonRefreshNumberOfAgents)
+                                        .addGap(0, 8, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel12)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel10)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(labelIsReady)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(18, 18, 18)
-                        .addComponent(textFieldFiboNumber)))
-                .addContainerGap())
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buttonExit)
+                        .addGap(28, 28, 28))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,17 +233,18 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
                             .addComponent(jLabel8)
                             .addComponent(labelNumberOfAgents)
                             .addComponent(buttonRefreshNumberOfAgents))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(buttonSendMessage)
-                .addGap(20, 20, 20))
+                .addGap(52, 52, 52)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(labelIsReady))
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonExit))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
@@ -285,6 +306,10 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
         myAgent.postGuiEvent(ge);
     }                                                           
 
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        // TODO add your handling code here:
+    }                                          
+
     /**
      * @param args the command line arguments
      */
@@ -321,24 +346,23 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify                     
+    private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonKillAllAgents;
     private javax.swing.JButton buttonLaunchAgents;
     private javax.swing.JButton buttonRefreshNumberOfAgents;
-    private javax.swing.JButton buttonSendMessage;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel labelIsReady;
     private javax.swing.JLabel labelNumberOfAgents;
-    private javax.swing.JTextArea textAreaMessagesReceived;
-    private javax.swing.JTextArea textAreaSendMessage;
+    private javax.swing.JTextArea textAreaMachines;
     private javax.swing.JTextField textFieldFiboNumber;
     private javax.swing.JTextField textFieldIntervalOfTicker;
     private javax.swing.JTextField textFieldNumberOfAgents;
@@ -359,6 +383,14 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
         public void windowClosing(WindowEvent evt) {
             //myAgent.cleanUpStuffs();
         }
-    }   
+    }
+    
+    public void setTextAreaContent(String content){
+    	textAreaMachines.setText(content);
+    }
+    
+    public void setStatus(String content){
+    	labelIsReady.setText(content);
+    }
 }
 
