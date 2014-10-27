@@ -77,7 +77,7 @@ public class AgentSubCoordinator extends Agent {
         ReceiveMessage rm = new ReceiveMessage();
         addBehaviour(rm);
         
-        notifyCoordinator();
+       // notifyCoordinator();
     }
     
     //@Override
