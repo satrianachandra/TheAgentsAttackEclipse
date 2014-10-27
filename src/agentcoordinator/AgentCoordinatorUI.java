@@ -27,18 +27,6 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
      * Creates new form AgentCoordinatorUI
      */
     public AgentCoordinatorUI() {
-        try {
-            // Set Motif L&F on any platform
-            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AgentCoordinatorUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(AgentCoordinatorUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(AgentCoordinatorUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(AgentCoordinatorUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
         initComponents();
         addWindowListener(new WindowEventHandler());
         setVisible(true);
