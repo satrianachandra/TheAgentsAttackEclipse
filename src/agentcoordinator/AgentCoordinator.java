@@ -381,7 +381,7 @@ public class AgentCoordinator extends GuiAgent {
     		                     .withMaxCount(numberOfInstance)
     		                     .withSubnetId("subnet-a020fac5")
     		                     .withKeyName("14 _LP1_KEY_ D7001D_CHASAT-4")
-    		                     .withSecurityGroups("14 _LP1_SEC_D7001D_CHASAT-4");
+    		                     .withSecurityGroupIds("sg-cbc665ae");
     		  RunInstancesResult runInstancesResult = 
     				  amazonEC2Client.runInstances(runInstancesRequest);
     		  
