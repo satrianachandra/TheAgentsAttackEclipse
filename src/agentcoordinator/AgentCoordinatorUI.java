@@ -29,13 +29,7 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
     public AgentCoordinatorUI() {
         initComponents();
         //addWindowListener(new WindowEventHandler());
-        //setVisible(true);
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AgentCoordinatorUI().setVisible(true);
-            }
-        });
+        setVisible(true);
         buttonKillAllAgents.setEnabled(false);
     }
 
