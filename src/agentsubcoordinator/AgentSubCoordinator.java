@@ -68,8 +68,9 @@ public class AgentSubCoordinator extends Agent {
         //doDelete();
         }
         //hard coding the Coordinator's AID, will be CHANGED, ok!
-        coordinatorAID = new AID("TheCoordinator@172.30.1.217:1099/JADE", AID.ISGUID);
-        coordinatorAID.addAddresses("http://ip-172-30-1-217.eu-west-1.compute.internal:7778/acc");
+        coordinatorAID = new AID("TheCoordinator@172.30.1.7:1099/JADE", AID.ISGUID);
+        //coordinatorAID.addAddresses("http://ip-172-30-1-217.eu-west-1.compute.internal:7778/acc");
+        coordinatorAID.addAddresses("http://ip-172-30-1-7.eu-west-1.compute.internal:7778/acc");
         
         ReceiveMessage rm = new ReceiveMessage();
         addBehaviour(rm);
