@@ -262,8 +262,8 @@ public class AgentSubCoordinator extends Agent {
         System.out.print("runtime created\n");
         
         
-        //ProfileImpl mProfile = new ProfileImpl();
-        //jade.wrapper.AgentContainer mainContainer = rt.createMainContainer(mProfile);
+        ProfileImpl mProfile = new ProfileImpl();
+        jade.wrapper.AgentContainer mainContainer = rt.createMainContainer(mProfile);
         
         
         //start the RMA agent
