@@ -391,13 +391,12 @@ public class AgentCoordinator extends GuiAgent {
     		  
     		  Reservation myReservation = runInstancesResult.getReservation();
     		  List<Instance> instanceList=  myReservation.getInstances();
-    		  for (int i=0;i>instanceList.size();i++){
+    		  for (int i=0;i<instanceList.size();i++){
     			  Instance instance= instanceList.get(i);
     			  instanceIDList.add(instance.getInstanceId()); //add to our list of instances ID
     			  //then tag them for easy finding
     			  CreateTagsRequest createTagsRequest = new CreateTagsRequest();
-    			  createTagsRequest.withResources(instance.getInstanceId()) //
-    			      .withTags(new Tag("Name", "SCAgent-TeamAsia-" + i));
+    			  createTagsRequest.withResources(instance.getInstanceId()).withTags(new Tag("Name", "SCAgent-TeamAsia-" + i));
     			  amazonEC2Client.createTags(createTagsRequest);
     		  }
     		  
