@@ -229,6 +229,7 @@ public class AgentCoordinator extends GuiAgent {
 
     
     public static void main(String[]args){
+    	/*
     	try {
 			MyLogger.setup();
 		} catch (IOException e) {
@@ -236,6 +237,7 @@ public class AgentCoordinator extends GuiAgent {
 			e.printStackTrace();
 		}
     	MyLogger.setLevel(3);
+    	*/
     	
     	// Get a hold on JADE runtime
         Runtime rt = Runtime.instance();
