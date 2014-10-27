@@ -220,7 +220,7 @@ public class AgentCoordinator extends GuiAgent {
                         		if ((listOfSubCoordinators.size()>=numberOfInstanceRequired) && (isWaitingForInstance)){
                         			launchAllAgents(pendingSP);
                         			agentUI.setTextAreaContent("Instances ready, launching agents...");
-                        		}else{
+                        		}else if (isWaitingForInstance){
                         			agentUI.setStatus("launching additional instances, please wait ...");
                         		}
                         	}
