@@ -445,7 +445,7 @@ public class AgentCoordinator extends GuiAgent {
         SearchConstraints sc = new SearchConstraints();
         // We want to receive 10 results at most
         //sc.setMaxResults(new Long(20));
-        sc.setMaxDepth(1L);
+        //sc.setMaxDepth(1L);
         DFAgentDescription[] results = DFService.search(this,dfAID, template, sc);
         
         /*
