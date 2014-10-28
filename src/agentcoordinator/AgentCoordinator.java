@@ -44,7 +44,6 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 
 import messageclasses.SmithParameter;
-import utils.MyLogger;
 import utils.Terminal;
 
 
@@ -250,7 +249,7 @@ public class AgentCoordinator extends GuiAgent {
         rt.setCloseVM(true);
         System.out.print("runtime created\n");
         
-        
+        /*
         //start main container
         ProfileImpl mProfile = new ProfileImpl(null,1099,null);
         mProfile.setParameter("jade_domain_df_maxresult", "4000");

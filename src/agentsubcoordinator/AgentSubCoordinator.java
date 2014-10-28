@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import utils.MyLogger;
+
 import messageclasses.SmithParameter;
 /**
  *
@@ -227,13 +227,6 @@ public class AgentSubCoordinator extends Agent {
     }
     
     public static void main(String[]args){
-    	try {
-			MyLogger.setup();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	MyLogger.setLevel(3);
     	
         // Get a hold on JADE runtime
         Runtime rt = Runtime.instance();
