@@ -433,9 +433,12 @@ public class AgentCoordinator extends GuiAgent {
     
     @Override
     protected void takeDown(){
-        for (int i=0;i<sshProcessess.size();i++){
-            sshProcessess.get(i).destroy();
-        }
+        try {
+			DFService.deregister(this);
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     private int getNumberOfAgents(AID dfAID) throws FIPAException{
