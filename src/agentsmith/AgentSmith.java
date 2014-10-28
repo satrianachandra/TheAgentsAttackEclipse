@@ -150,6 +150,12 @@ public class AgentSmith extends Agent {
     
     @Override
     protected void takeDown(){
+    	try {
+			DFService.deregister(this);
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         /*
         try {
             if (in !=null){
