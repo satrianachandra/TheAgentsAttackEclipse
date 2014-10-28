@@ -305,6 +305,7 @@ public class AgentCoordinator extends GuiAgent {
         //numberOfRunningAgents=0;
         //sendMessageToSC(GET_NUMBER_OF_AGENTS);
     	int numberofrunningagents = 0;
+    	System.out.println("size: "+listOfSubCoordinators.size());
     	for (int i=0;i<listOfSubCoordinators.size();i++){
     		String remoteDfName = "df@"+listOfSubCoordinators.get(i).getName().split("@")[1];
     		System.out.println(remoteDfName);
