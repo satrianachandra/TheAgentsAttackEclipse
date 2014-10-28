@@ -306,7 +306,7 @@ public class AgentCoordinator extends GuiAgent {
     	int numberofrunningagents = 0;
     	for (int i=0;i<listOfSubCoordinators.size();i++){
     		String remoteDfName = "df@"+listOfSubCoordinators.get(i).getName().split("@")[1];
-    		
+    		System.out.println(remoteDfName);
     		AID dfAID = new AID(remoteDfName, AID.ISGUID);
     		try {
 				numberofrunningagents = numberofrunningagents+ getNumberOfAgents(dfAID);
