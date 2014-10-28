@@ -10,8 +10,12 @@ import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.TickerBehaviour;
+import jade.domain.DFService;
 import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,6 +24,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import agentsubcoordinator.AgentSubCoordinator;
 
 /**
@@ -68,7 +73,7 @@ public class AgentSmith extends Agent {
             */
         }
         
-        /*
+        
         //registration to the DF, so we can search the agents later, need to check if necessary
         DFAgentDescription dfd = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
@@ -85,7 +90,7 @@ public class AgentSmith extends Agent {
             System.err.println(getLocalName()+" registration with DF unsucceeded. Reason: "+e.getMessage());
         //doDelete();
         }
-        */
+        
         TickerBehaviour tb = new TickerBehaviour(this, interval) {
             protected void onTick() {
                 if (mustBeKilled){

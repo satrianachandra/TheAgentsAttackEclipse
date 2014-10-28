@@ -136,29 +136,7 @@ public class AgentSubCoordinator extends Agent {
         
     }*/
     
-    private List<AID> findAgents(AID dfAID) throws FIPAException{
-        DFAgentDescription template = new DFAgentDescription();
-        ServiceDescription templateSd = new ServiceDescription();
-        templateSd.setType("AgentSmith");
-        template.addServices(templateSd);
-        SearchConstraints sc = new SearchConstraints();
-        // We want to receive 10 results at most
-        //sc.setMaxResults(new Long(20));
-        sc.setMaxDepth(1L);
-        DFAgentDescription[] results = DFService.search(this,dfAID, template, sc);
         
-        List<AID> myAgentsList = new ArrayList<AID>();
-        if (results.length>0){
-            for(int i=0;i<results.length;i++){
-                DFAgentDescription agentDesc = results[i];
-                AID provider = agentDesc.getName();
-                myAgentsList.add(provider);
-           }   
-        }
-        return myAgentsList;
-    }
-
-    
     public class SendMessage extends OneShotBehaviour {
         
         private ACLMessage msg;

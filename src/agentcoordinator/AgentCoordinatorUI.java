@@ -315,7 +315,7 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
     }                                                           
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        myAgent.terminateAllAdditionalInstances();
+    	myAgent.terminateAllAdditionalInstances();
         System.exit(0);
     }                                          
 

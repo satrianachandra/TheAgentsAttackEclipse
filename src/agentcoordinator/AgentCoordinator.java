@@ -12,6 +12,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.gui.GuiAgent;
@@ -300,8 +301,21 @@ public class AgentCoordinator extends GuiAgent {
     }
         
     private void getNumberOfAgents(){
-        numberOfRunningAgents=0;
-        sendMessageToSC(GET_NUMBER_OF_AGENTS);
+        //numberOfRunningAgents=0;
+        //sendMessageToSC(GET_NUMBER_OF_AGENTS);
+    	int numberofrunningagents = 0;
+    	for (int i=0;i<listOfSubCoordinators.size();i++){
+    		String remoteDfName = "df@"+listOfSubCoordinators.get(i).getName().split("@")[1];
+    		AID dfAID = new AID(remoteDfName, AID.ISGUID);
+    		try {
+				numberofrunningagents = numberofrunningagents+ getNumberOfAgents(dfAID);
+			} catch (FIPAException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	agentUI.updateNumberOfAgents(numberofrunningagents);
+    	
     }
     
     private void sendMessageToSC(int spType){
@@ -420,6 +434,32 @@ public class AgentCoordinator extends GuiAgent {
             sshProcessess.get(i).destroy();
         }
     }
+    
+    private int getNumberOfAgents(AID dfAID) throws FIPAException{
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription templateSd = new ServiceDescription();
+        templateSd.setType("AgentSmith");
+        template.addServices(templateSd);
+        SearchConstraints sc = new SearchConstraints();
+        // We want to receive 10 results at most
+        //sc.setMaxResults(new Long(20));
+        sc.setMaxDepth(1L);
+        DFAgentDescription[] results = DFService.search(this,dfAID, template, sc);
+        
+        /*
+        List<AID> myAgentsList = new ArrayList<AID>();
+        if (results.length>0){
+            for(int i=0;i<results.length;i++){
+                DFAgentDescription agentDesc = results[i];
+                AID provider = agentDesc.getName();
+                myAgentsList.add(provider);
+           }   
+        }
+        */
+        return results.length;
+    }
+
+
     
 }
 
