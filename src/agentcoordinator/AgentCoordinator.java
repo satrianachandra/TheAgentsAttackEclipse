@@ -308,6 +308,7 @@ public class AgentCoordinator extends GuiAgent {
     		String remoteDfName = "df@"+listOfSubCoordinators.get(i).getName().split("@")[1];
     		System.out.println(remoteDfName);
     		AID dfAID = new AID(remoteDfName, AID.ISGUID);
+    		dfAID.addAddresses(listOfSubCoordinators.get(i).getAddressesArray()[0]);
     		try {
 				numberofrunningagents = numberofrunningagents+ getNumberOfAgents(dfAID);
 			} catch (FIPAException e) {
