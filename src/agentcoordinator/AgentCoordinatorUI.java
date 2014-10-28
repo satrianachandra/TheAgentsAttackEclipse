@@ -131,7 +131,7 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
             }
         });
 
-        labelNumberOfAgents.setText("0");
+        labelNumberOfAgents.setText("1234");
 
         jLabel9.setText("Fibo Number");
 
@@ -207,8 +207,8 @@ public class AgentCoordinatorUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelNumberOfAgents, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(labelNumberOfAgents, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(49, 49, 49)
                         .addComponent(buttonRefreshNumberOfAgents)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
