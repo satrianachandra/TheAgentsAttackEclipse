@@ -311,6 +311,7 @@ public class AgentCoordinator extends GuiAgent {
     		dfAID.addAddresses(listOfSubCoordinators.get(i).getAddressesArray()[0]);
     		try {
 				numberofrunningagents = numberofrunningagents+ getNumberOfAgents(dfAID);
+				System.out.println("number of agents:"+getNumberOfAgents(dfAID));
 			} catch (FIPAException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -444,8 +445,8 @@ public class AgentCoordinator extends GuiAgent {
         template.addServices(templateSd);
         SearchConstraints sc = new SearchConstraints();
         // We want to receive 10 results at most
-        //sc.setMaxResults(new Long(20));
-        //sc.setMaxDepth(1L);
+        sc.setMaxResults(new Long(3000));
+        sc.setMaxDepth(1L);
         DFAgentDescription[] results = DFService.search(this,dfAID, template, sc);
         
         /*
